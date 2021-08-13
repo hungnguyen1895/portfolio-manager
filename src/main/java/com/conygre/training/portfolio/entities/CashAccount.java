@@ -11,13 +11,13 @@ public class CashAccount {
     @Column(name="id")
     private int id;
 
-    @Column(name="userId")
+    @Column(name="user_id")
     private int userId;
 
     @Column(name="account_name")
     private String accountName;
 
-    @Column(name="username")
+    @Column(name="value")
     private Double value;
 
     public int getId() {

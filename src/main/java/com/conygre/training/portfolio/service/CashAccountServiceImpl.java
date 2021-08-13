@@ -16,6 +16,20 @@ public class CashAccountServiceImpl implements CashAccountService {
 
     @Override
     public Collection<CashAccount> getAllAccounts() {
-        return null;
+        return cashAccountRepository.findAll();
     }
+
+    @Override
+    public Double getCash() {
+        Collection<CashAccount> cashAccounts = getAllAccounts();
+        Double totalCash = 0.0;
+        for (CashAccount acc: cashAccounts) {
+            totalCash += acc.getValue();
+        }
+
+
+        return totalCash;
+    }
+
+
 }

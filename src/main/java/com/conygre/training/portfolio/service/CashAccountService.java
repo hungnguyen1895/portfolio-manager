@@ -6,6 +6,5 @@ import java.util.Collection;
 
 public interface CashAccountService {
     Collection<CashAccount> getAllAccounts();
-
-
+    Double getCash();
 }
