@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class InvestmentServiceImpl implements InvestmentService{
@@ -60,42 +60,54 @@ public class InvestmentServiceImpl implements InvestmentService{
         return marketPrice;
     }
 
-//    @Override
-//    public Double getWeekChange() throws IOException, ParseException {
-////        String url = "http://rapidapi.com";
-////
-////        Map<String, String> urlParams = new HashMap<>();
-////        urlParams.put("symbol", "TSLA");
-////        urlParams.put("function", "TIME_SERIES_DAILY_ADJUSTED");
-////        RestTemplate restTemplate = new RestTemplate();
-////        System.out.println(restTemplate.getForObject(url, String.class, urlParams));
-////        System.out.println("testing");
-//
-//        OkHttpClient client = new OkHttpClient();
-//
-//        Request request = new Request.Builder()
-//                .url("https://alpha-vantage.p.rapidapi.com/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=TSLA&outputsize=compact&datatype=json")
-//                .get()
-//                .addHeader("x-rapidapi-key", "fad70b116amshdf5fa2b2013d40bp157fa6jsn559c34c2e61e")
-//                .addHeader("x-rapidapi-host", "alpha-vantage.p.rapidapi.com")
-//                .build();
-//
-//        Response response = client.newCall(request).execute();
-////        JSONParser g = new JSONParser();
-////        JSONObject json = (JSONObject) g.parse(response.body().string());
-//
-//
-//        System.out.println(response.body().string());
-////        System.out.println(response.)
-//        return 0.0;
-//    }
+    @Override
+    public Double getWeekChange() throws IOException, ParseException {
+        Double change = 0.0;
 
-    // getInvestment change by week, month, last quarter, year to date (YTD)
+        HashMap<String, Double> symbols = getAllInvestmentSymbols();
 
-    // TotalValueChange = 0;
-    // get list of all stocks
-        // A = get price of last week * quantity of a stock: 500
-        // B = get current price * quantity of stock: 1000
-        // TotalValueChange += B - A;
+        for (String symbol: symbols.keySet()) {
+            Request request = new Request.Builder()
+                    .url("https://alpha-vantage.p.rapidapi.com/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=" + symbol +"&outputsize=compact&datatype=json")
+                    .get()
+                    .addHeader("x-rapidapi-key", "fad70b116amshdf5fa2b2013d40bp157fa6jsn559c34c2e61e")
+                    .addHeader("x-rapidapi-host", "alpha-vantage.p.rapidapi.com")
+                    .build();
+            OkHttpClient client = new OkHttpClient();
+            Response response = client.newCall(request).execute();
+            String body = response.body().string();
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(body);
+            jsonObject = (JSONObject)jsonObject.get("Time Series (Daily)");
 
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+
+            long DAY_IN_MS = 1000 * 60 * 60 * 24;
+            Date today = new Date(date.getTime() - (1 * DAY_IN_MS));
+            Date lastweek = new Date(date.getTime() - (8 * DAY_IN_MS));
+            String todayString = dateFormat.format(today).toString();
+            String lastweekString = dateFormat.format(lastweek).toString();
+            JSONObject todayObject = (JSONObject)jsonObject.get(todayString);
+            JSONObject lastweekObject = (JSONObject)jsonObject.get(lastweekString);
+
+            double currentChange = Double.parseDouble(todayObject.get("4. close").toString()) - Double.parseDouble(lastweekObject.get("4. close").toString());
+            double share = symbols.get(symbol);
+            change += currentChange * share;
+        }
+
+        return change;
+    }
+
+    private HashMap<String, Double> getAllInvestmentSymbols() {
+        Collection<Investment> investments = getAllInvestments();
+
+        HashMap<String, Double> symbols = new HashMap<>();
+
+        for (Investment investment: investments) {
+            symbols.put(investment.getStockSymbol(), investment.getQuantity());
+        }
+
+        return symbols;
+    }
 }

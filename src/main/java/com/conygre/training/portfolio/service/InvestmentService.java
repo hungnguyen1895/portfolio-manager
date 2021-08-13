@@ -10,5 +10,5 @@ import java.util.Collection;
 public interface InvestmentService {
     Collection<Investment> getAllInvestments();
     Double getTotalInvestment() throws IOException, ParseException;
-//    Double getWeekChange();
+    Double getWeekChange() throws IOException, ParseException;
 }

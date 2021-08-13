@@ -22,4 +22,9 @@ public class InvestmentController {
     public Double getInvestment() throws IOException, ParseException {
         return investmentService.getTotalInvestment();
     }
+
+    @GetMapping("/weekly")
+    public Double getWeekChange() throws IOException, ParseException {
+        return investmentService.getWeekChange();
+    }
 }
