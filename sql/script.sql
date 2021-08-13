@@ -1,3 +1,5 @@
+use conygre;
+
 CREATE TABLE `conygre`.`user` (
                                   `id` INT NOT NULL,
                                   `firstname` VARCHAR(45) NULL,
@@ -34,3 +36,24 @@ CREATE TABLE `conygre`.`investment` (
                                                 ON DELETE NO ACTION
                                                 ON UPDATE NO ACTION);
 
+
+
+
+INSERT INTO user (id, firstname, lastname, username, password) VALUES
+(1, 'hung', 'nguyen', 'hungnguyen', '123456'),
+(2,'jessica', 'phelan', 'jessphelan', '123456'),
+(3, 'jovanny', 'vera', 'jovannyvera', '123456');
+
+INSERT INTO cash_account (id, userId, account_name, value) VALUES
+(1, 1, 'Citi', 3127.12),
+(2, 1, 'Well Fargo', 1223.12),
+(3, 1, 'Fidelity Cash', 6734.90);
+
+INSERT INTO investment (id, userId, stock_name, quantity, stock_symbol) VALUES
+(1, 1, 'TESLA', 31.25, 'TSLA'),
+(2, 1, 'Apple', 20, 'AAPL'),
+(3, 1, 'Citi', 200, 'C');
+
+select * from user;
+select * from cash_account;
+select * from investment;
