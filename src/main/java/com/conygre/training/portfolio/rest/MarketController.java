@@ -1,6 +1,7 @@
 package com.conygre.training.portfolio.rest;
 
 
+import com.conygre.training.portfolio.pojo.StockWithPercent;
 import com.conygre.training.portfolio.service.CashAccountService;
 import com.conygre.training.portfolio.service.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,12 @@ public class MarketController {
     private MarketService marketService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/index")
-    public List<String> getIndexMarketMovers() {
+    public List<StockWithPercent> getIndexMarketMovers() {
         return marketService.getIndexMarketMovers();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/bond")
-    public List<String> getBondMarketMovers() {
+    public List<StockWithPercent> getBondMarketMovers() {
         return marketService.getBondMarketMovers();
     }
 
