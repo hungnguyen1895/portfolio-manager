@@ -10,4 +10,7 @@ public interface MarketDAO {
     public HashMap<String, Double> getMarketChangePercents(List<String> symbols) throws ParseException, IOException;
     public List<String> getIndiciesList() throws ParseException, IOException;
     public List<String> getBondsList();
+    public Double getMarketPrice(String symbol) throws IOException, ParseException;
+    public Double getSymbolWeekChange(String symbol) throws IOException, ParseException;
+
 }
