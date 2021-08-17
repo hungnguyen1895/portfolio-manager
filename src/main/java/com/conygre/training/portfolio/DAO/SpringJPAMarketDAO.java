@@ -1,5 +1,6 @@
 package com.conygre.training.portfolio.DAO;
 
+import com.conygre.training.portfolio.pojo.StockWithPercent;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -21,7 +22,7 @@ import java.util.List;
 public class SpringJPAMarketDAO implements MarketDAO{
 
     @Override
-    public HashMap<String, Double> getMarketChangePercents(List<String> symbols) throws ParseException, IOException {
+    public List<StockWithPercent> getMarketChangePercents(List<String> symbols) throws ParseException, IOException {
 
         if(symbols.size() ==0)
             return null;
@@ -31,7 +32,7 @@ public class SpringJPAMarketDAO implements MarketDAO{
         for(int i=1; i <symbols.size();i++){
             symbolString.append("%2C").append(symbols.get(i));
         }
-        HashMap<String, Double> changePercentMap = new HashMap<>();
+        List<StockWithPercent> changePercentList = new LinkedList<>();
 
         Request request = new Request.Builder()
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=" + symbolString.toString())
@@ -51,10 +52,10 @@ public class SpringJPAMarketDAO implements MarketDAO{
         for(int i =0; i < jsonArray.size();i++){
             jsonObject = (JSONObject)jsonArray.get(i);
             Double changePercent = (Double)jsonObject.get("regularMarketChangePercent");
-            changePercentMap.put(symbols.get(i), changePercent);
+            changePercentList.add(new StockWithPercent(symbols.get(i), changePercent));
         }
 
-        return changePercentMap;
+        return changePercentList;
     }
 
     @Override

@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 
-import static com.conygre.training.portfolio.service.MarketServiceImpl.convertStockAndMapToObject;
-import static com.conygre.training.portfolio.service.MarketServiceImpl.sortListBasedOnMarketChangePercent;
+import static com.conygre.training.portfolio.service.MarketServiceImpl.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -47,7 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<StockWithPercent> getUserGainersAndLosers() {
         List<String> symbols = new LinkedList<>();
-        HashMap<String, Double> valuesMap;
+        List<StockWithPercent> valuesList;
         List<Investment> investments = investmentRepository.findAll();
         //get stock symbols for users
         for(Investment investment : investments){
@@ -56,17 +55,16 @@ public class UserServiceImpl implements UserService {
 
         //get change percents for each stock
         try{
-            valuesMap = marketDAO.getMarketChangePercents(symbols);
+            valuesList = marketDAO.getMarketChangePercents(symbols);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
             return null;
         }
 
-        sortListBasedOnMarketChangePercent(symbols, valuesMap);
-        Collections.reverse(symbols);
-        //convert stocks and stock map into object to return
+        sortListBasedOnMarketChangePercent(valuesList);
+        Collections.reverse(valuesList);
 
-        return convertStockAndMapToObject(symbols, valuesMap);
+        return valuesList;
     }
 }

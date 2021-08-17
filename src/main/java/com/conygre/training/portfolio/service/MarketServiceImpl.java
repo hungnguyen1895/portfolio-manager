@@ -19,66 +19,53 @@ public class MarketServiceImpl implements MarketService{
     @Override
     public List<StockWithPercent> getIndexMarketMovers() {
         List<String> symbols;
-        HashMap<String, Double> valuesMap;
+        List<StockWithPercent> valuesList;
         try{
             symbols = marketDAO.getIndiciesList();
-            valuesMap = marketDAO.getMarketChangePercents(symbols);
+            valuesList = marketDAO.getMarketChangePercents(symbols);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
             return null;
         }
 
-        sortListBasedOnMarketChangePercent(symbols, valuesMap);
-        Collections.reverse(symbols);
-        return convertStockAndMapToObject(symbols, valuesMap);
+        sortListBasedOnMarketChangePercent(valuesList);
+        Collections.reverse(valuesList);
+        return valuesList;
 
     }
 
     @Override
-    public List<StockWithPercent>  getBondMarketMovers() {
+    public List<StockWithPercent> getBondMarketMovers() {
         List<String> symbols;
-        HashMap<String, Double> valuesMap;
+        List<StockWithPercent> valuesList;
         try{
             symbols = marketDAO.getBondsList();
-            valuesMap = marketDAO.getMarketChangePercents(symbols);
+            valuesList = marketDAO.getMarketChangePercents(symbols);
         }
         catch(Exception e){
             System.out.println(e.getMessage());
             return null;
         }
 
-        sortListBasedOnMarketChangePercent(symbols, valuesMap);
-        Collections.reverse(symbols);
-        return convertStockAndMapToObject(symbols, valuesMap);
+        sortListBasedOnMarketChangePercent(valuesList);
+        Collections.reverse(valuesList);
+        return valuesList;
     }
 
 
-    public static void sortListBasedOnMarketChangePercent(List<String> symbols, HashMap<String, Double> valuesMap){
-        for (int i = 0; i < symbols.size(); i++) {
-            for (int j = 1; j < (symbols.size() - i); j++) {
-                if (valuesMap.get(symbols.get(j - 1)) > valuesMap.get(symbols.get(j))) {
+    public static void sortListBasedOnMarketChangePercent(List<StockWithPercent> valuesList){
+        for (int i = 0; i < valuesList.size(); i++) {
+            for (int j = 1; j < (valuesList.size() - i); j++) {
+                if (valuesList.get(j - 1).getPercentChange() > valuesList.get(j).getPercentChange()) {
                     //swap elements
-                    String temp = symbols.get(j - 1);
-                    symbols.set(j - 1, symbols.get(j)) ;
-                    symbols.set(j,temp) ;
+                    StockWithPercent temp = valuesList.get(j - 1);
+                    valuesList.set(j - 1, valuesList.get(j)) ;
+                    valuesList.set(j,temp) ;
                 }
 
             }
         }
     }
 
-    public static List<StockWithPercent> convertStockAndMapToObject(List<String> symbols, HashMap<String, Double> valuesMap){
-        List<StockWithPercent> stocks = new LinkedList<>();
-        try{
-            for(String symbol : symbols){
-                stocks.add(new StockWithPercent(symbol, valuesMap.get(symbol)));
-            }
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-            return null;
-        }
-        return stocks;
-    }
 }
