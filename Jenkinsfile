@@ -1,4 +1,4 @@
-def projectName = 'portfolioApp'
+def projectName = 'portfolio-app'
 def version = "0.0.${currentBuild.number}"
 def dockerImageTag = "${projectName}:${version}"
 
