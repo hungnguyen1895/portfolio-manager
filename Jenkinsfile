@@ -1,4 +1,4 @@
-def projectName = 'demospringdatabase'
+def projectName = 'portfolioApp'
 def version = "0.0.${currentBuild.number}"
 def dockerImageTag = "${projectName}:${version}"
 
