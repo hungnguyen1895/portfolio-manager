@@ -1,5 +1,11 @@
 use conygre;
 
+drop table IF EXISTS cash_account;
+
+drop table IF EXISTS investment;
+
+drop table IF EXISTS user;
+
 CREATE TABLE `conygre`.`user` (
                                   `id` INT NOT NULL,
                                   `firstname` VARCHAR(45) NULL,
