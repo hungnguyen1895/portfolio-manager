@@ -1,6 +1,7 @@
 package com.conygre.training.portfolio.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="user")
@@ -20,9 +21,20 @@ public class User {
     @Column(name="username")
     private String username;
 
-
     @Column(name="password")
     private String password;
+
+    @JoinColumn(name="user_id", referencedColumnName="id")
+    @OneToMany( cascade={CascadeType.MERGE, CascadeType.PERSIST})
+    private List<CashAccount> cashAccounts;
+
+    public List<CashAccount> getCashAccounts() {
+        return cashAccounts;
+    }
+
+    public void setCashAccounts(List<CashAccount> cashAccounts) {
+        this.cashAccounts = cashAccounts;
+    }
 
     public int getId() {
         return id;

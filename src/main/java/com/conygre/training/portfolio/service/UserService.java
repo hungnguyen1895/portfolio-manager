@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface UserService {
     Collection<User> getAllUsers();
-    Double getNetWorth() throws IOException, ParseException;
+//    Double getNetWorth() throws IOException, ParseException;
     List<StockWithPercent> getUserGainersAndLosers();
 }

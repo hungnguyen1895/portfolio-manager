@@ -13,20 +13,19 @@ public class CashAccountServiceImpl implements CashAccountService {
     @Autowired
     private CashAccountRepository cashAccountRepository;
 
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
-    public Collection<CashAccount> getAllAccounts() {
-        return cashAccountRepository.findAll();
-    }
+    public Double getCashByUser(Integer id) {
 
-    @Override
-    public Double getCash() {
-        Collection<CashAccount> cashAccounts = getAllAccounts();
+        // Todo: Exception error if user is not found
+
+        Collection<CashAccount> cashAccounts = userRepository.findById(id).get().getCashAccounts();
         Double totalCash = 0.0;
         for (CashAccount acc: cashAccounts) {
             totalCash += acc.getValue();
         }
-
 
         return totalCash;
     }

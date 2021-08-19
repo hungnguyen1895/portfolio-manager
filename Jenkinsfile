@@ -18,7 +18,6 @@ pipeline {
     stage('Deploy Container To Openshift') {
       environment {
            OPENSHIFT_CREDS = credentials('openshiftCreds')
-           //MYSQL_CREDS = credentials('MySQLCreds')
           }
       steps {
         sh "oc login -u ${OPENSHIFT_CREDS_USR} -p ${OPENSHIFT_CREDS_PSW} --insecure-skip-tls-verify"
