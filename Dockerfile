@@ -15,6 +15,7 @@ COPY --from=compile /usr/src/mymaven/target/portfolio-0.0.1-SNAPSHOT.jar app.jar
 COPY src/main/resources/application-docker.properties application.properties
 RUN echo "spring.datasource.username=$USERNAME" >> application.properties
 RUN echo "spring.datasource.password=$PASSWORD" >> application.properties
+RUN cat application.properties
 EXPOSE 8080
 ENV JAVA_OPTS=""
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/urandom -jar /app.jar" ]
