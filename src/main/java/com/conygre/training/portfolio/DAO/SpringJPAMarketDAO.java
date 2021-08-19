@@ -136,8 +136,57 @@ public class SpringJPAMarketDAO implements MarketDAO{
         Date lastweek = new Date(date.getTime() - (8 * DAY_IN_MS));
         String todayString = dateFormat.format(today).toString();
         String lastweekString = dateFormat.format(lastweek).toString();
+//        System.out.println("Today: " + todayString);
+
         JSONObject todayObject = (JSONObject)jsonObject.get(todayString);
+//        System.out.println("today object: " + todayObject);
         JSONObject lastweekObject = (JSONObject)jsonObject.get(lastweekString);
+
+        // Todo: get first not null JSOnObject from today
+        // Date today = new Date(date.getTime() - (1 * DAY_IN_MS));
+        // keep decreasing day by 1 to get the first not null
+
+        // Date lastweek = new Date(date.getTime() - (8 * DAY_IN_MS));
+        // lastweek might be null if it's weekend
+        // need to keep decreasing to get the first available not null
+
+        // testing weekend
+        // put i back to 1
+//        int i = 3;
+//        Date weekend = new Date(date.getTime() - (i * DAY_IN_MS));
+////        System.out.println(dateFormat.format(weekend));
+//        JSONObject weekend1 = null;
+//        do {
+//            weekend = new Date(date.getTime() - (i * DAY_IN_MS));
+//            String weekendTesting = dateFormat.format(weekend);
+//            weekend1 = (JSONObject) jsonObject.get(weekendTesting);
+//            i++;
+//
+//        } while (weekend1 == null);
+//        System.out.println("closest from weekend: " + dateFormat.format(weekend));
+//
+//        Date weekFromToday;
+//
+//        JSONObject weekFromTodayJSON = null;
+//        do {
+//            // only add 6 because already increment 1 the loop before
+//            weekFromToday = new Date(date.getTime() - ((i  + 6)* DAY_IN_MS));
+//            String s = dateFormat.format(weekFromToday);
+//            weekFromTodayJSON = (JSONObject) jsonObject.get(s);
+//            i++;
+//
+//        } while (weekFromTodayJSON == null);
+//        System.out.println("A week ago: " + dateFormat.format(weekFromToday));
+
+//        String weekendString = dateFormat.format(weekend).toString();
+//        System.out.println(weekendString);
+//        JSONObject weekendObject = (JSONObject)jsonObject.get(weekendString);
+//        System.out.println(weekendObject);
+//        System.out.println(weekendObject.get("4. close"));
+//
+//        System.out.println("one week from last week");
+//        Date lastweekWeekend = new Date((long)String.valueOf(weekend) - (7 * DAY_IN_MS));
+//        System.out.println(dateFormat.format(lastweekWeekend).toString());
 
         return Double.parseDouble(todayObject.get("4. close").toString()) - Double.parseDouble(lastweekObject.get("4. close").toString());
     }
