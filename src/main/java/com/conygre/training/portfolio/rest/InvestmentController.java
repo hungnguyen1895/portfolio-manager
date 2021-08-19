@@ -6,6 +6,7 @@ import com.conygre.training.portfolio.service.InvestmentService;
 import net.minidev.json.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,13 +19,15 @@ public class InvestmentController {
     @Autowired
     private InvestmentService investmentService;
 
-    @GetMapping
-    public Double getInvestment() throws IOException, ParseException {
-        return investmentService.getTotalInvestment();
+    @GetMapping("/{userID}")
+    public Double getInvestment(@PathVariable("userID") Integer userID) throws IOException, ParseException {
+        return investmentService.getTotalInvestment(userID);
     }
 
-    @GetMapping("/weekly")
-    public Double getWeekChange() throws IOException, ParseException {
-        return investmentService.getWeekChange();
+    @GetMapping("/{timeperiod}/{userID}")
+    public Double getStockChange(@PathVariable("timeperiod") String timeperiod, @PathVariable("userID") Integer userID)
+            throws IOException, ParseException {
+        return investmentService.getStockChange(timeperiod, userID);
     }
+
 }

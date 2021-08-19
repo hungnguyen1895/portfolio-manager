@@ -29,13 +29,13 @@ public class InvestmentServiceImpl implements InvestmentService{
     private MarketDAO marketDAO;
 
     @Override
-    public Collection<Investment> getAllInvestments() {
-        return investmentRepository.findAll();
+    public Collection<Investment> getAllInvestments(Integer id) {
+        return investmentRepository.findByUserId(id);
     }
 
     @Override
-    public Double getTotalInvestment() throws IOException, ParseException {
-        Collection<Investment> investments = getAllInvestments();
+    public Double getTotalInvestment(Integer userID) throws IOException, ParseException {
+        Collection<Investment> investments = getAllInvestments(userID);
         double totalInvestment = 0.0;
         for (Investment investment: investments)
             // currentPrice =  call API to get price for investment.getStockSymbol(
@@ -45,19 +45,19 @@ public class InvestmentServiceImpl implements InvestmentService{
     }
 
     @Override
-    public Double getWeekChange() throws IOException, ParseException {
-        Double change = 0.0;
-
-        HashMap<String, Double> symbols = getAllInvestmentSymbols();
-
+    public Double getStockChange(String timePeriod, Integer userID) throws IOException, ParseException {
+        double change = 0.0;
+        HashMap<String, Double> symbols = getAllInvestmentSymbols(userID);
         for (String symbol : symbols.keySet())
-            change += marketDAO.getSymbolWeekChange(symbol) * symbols.get(symbol);
+            change += marketDAO.getSymbolTimeChange(symbol, timePeriod) * symbols.get(symbol);
 
         return change;
     }
 
-    private HashMap<String, Double> getAllInvestmentSymbols() {
-        Collection<Investment> investments = getAllInvestments();
+
+
+    private HashMap<String, Double> getAllInvestmentSymbols(Integer userID) {
+        Collection<Investment> investments = getAllInvestments(userID);
 
         HashMap<String, Double> symbols = new HashMap<>();
 

@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 public interface InvestmentService {
-    Collection<Investment> getAllInvestments();
-    Double getTotalInvestment() throws IOException, ParseException;
-    Double getWeekChange() throws IOException, ParseException;
+    Collection<Investment> getAllInvestments(Integer id);
+    Double getTotalInvestment(Integer userID) throws IOException, ParseException;
+    Double getStockChange(String timePeriod, Integer userID) throws IOException, ParseException;
+
 }

@@ -12,6 +12,6 @@ public interface MarketDAO {
      List<String> getIndiciesList() throws ParseException, IOException;
      List<String> getBondsList();
      Double getMarketPrice(String symbol) throws IOException, ParseException;
-     Double getSymbolWeekChange(String symbol) throws IOException, ParseException;
+     Double getSymbolTimeChange(String symbol, String timePeriod) throws IOException, ParseException;
 
 }

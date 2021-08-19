@@ -38,10 +38,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-//    @Override
-//    public Double getNetWorth(id) throws IOException, ParseException {
-//        return investmentService.getTotalInvestment() + cashAccountService.getCash(id);
-//    }
+    @Override
+    public Double getNetWorth(Integer userID) throws IOException, ParseException {
+        return investmentService.getTotalInvestment(userID) + cashAccountService.getCashByUser(userID);
+    }
 
     @Override
     public List<StockWithPercent> getUserGainersAndLosers() {

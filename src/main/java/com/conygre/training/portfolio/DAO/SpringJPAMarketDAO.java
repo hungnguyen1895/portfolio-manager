@@ -11,12 +11,10 @@ import okhttp3.Response;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class SpringJPAMarketDAO implements MarketDAO{
@@ -37,12 +35,17 @@ public class SpringJPAMarketDAO implements MarketDAO{
         Request request = new Request.Builder()
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=" + symbolString.toString())
                 .get()
-                .addHeader("x-rapidapi-key", "f7dda5a1famsh26f811330bca0f1p1389e3jsn68144518d2cf")
                 .addHeader("x-rapidapi-host", "apidojo-yahoo-finance-v1.p.rapidapi.com")
+                .addHeader("x-rapidapi-key", "970675993dmsh1ee0ed42973487cp13e73ejsn1b783f8174b3")
                 .build();
 
         Response response = client.newCall(request).execute();
         String body = response.body().string();
+
+        if(body.contains("exceeded the MONTHLY quota")){
+            System.out.println("Used maximum API calls possible this month");
+            return null;
+        }
 
         JSONParser jsonParser = new JSONParser();
 
@@ -66,11 +69,18 @@ public class SpringJPAMarketDAO implements MarketDAO{
         Request request = new Request.Builder()
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-summary?region=US")
                 .get()
-                .addHeader("x-rapidapi-key", "f7dda5a1famsh26f811330bca0f1p1389e3jsn68144518d2cf")
                 .addHeader("x-rapidapi-host", "apidojo-yahoo-finance-v1.p.rapidapi.com")
+                .addHeader("x-rapidapi-key", "970675993dmsh1ee0ed42973487cp13e73ejsn1b783f8174b3")
                 .build();
 
         String body = client.newCall(request).execute().body().string();
+
+
+        if(body.contains("exceeded the MONTHLY quota")){
+            System.out.println("Used maximum API calls possible this month");
+            return null;
+        }
+
         JSONObject jsonObject = (JSONObject) jsonParser.parse(body);
         jsonObject = (JSONObject)jsonObject.get("marketSummaryAndSparkResponse");
         JSONArray jsonArray = (JSONArray)jsonObject.get("result");
@@ -98,12 +108,18 @@ public class SpringJPAMarketDAO implements MarketDAO{
         Request request = new Request.Builder()
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=" + symbol)
                 .get()
-                .addHeader("x-rapidapi-key", "f7dda5a1famsh26f811330bca0f1p1389e3jsn68144518d2cf")
                 .addHeader("x-rapidapi-host", "apidojo-yahoo-finance-v1.p.rapidapi.com")
+                .addHeader("x-rapidapi-key", "970675993dmsh1ee0ed42973487cp13e73ejsn1b783f8174b3")
                 .build();
         OkHttpClient client = new OkHttpClient();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
+
+        if(body.contains("exceeded the MONTHLY quota")){
+            System.out.println("Used maximum API calls possible this month");
+            return 0.0;
+        }
+
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(body);
         jsonObject = (JSONObject)jsonObject.get("quoteResponse");
@@ -114,80 +130,96 @@ public class SpringJPAMarketDAO implements MarketDAO{
     }
 
     @Override
-    public Double getSymbolWeekChange(String symbol) throws IOException, ParseException {
-        Request request = new Request.Builder()
-                .url("https://alpha-vantage.p.rapidapi.com/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=" + symbol +"&outputsize=compact&datatype=json")
+    public Double getSymbolTimeChange(String symbol, String timePeriod) throws IOException, ParseException {
+        Request         request = new Request.Builder()
+                .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data?symbol=" + symbol + "&region=US")
                 .get()
-                .addHeader("x-rapidapi-key", "fad70b116amshdf5fa2b2013d40bp157fa6jsn559c34c2e61e")
-                .addHeader("x-rapidapi-host", "alpha-vantage.p.rapidapi.com")
+                .addHeader("x-rapidapi-host", "apidojo-yahoo-finance-v1.p.rapidapi.com")
+                .addHeader("x-rapidapi-key", "970675993dmsh1ee0ed42973487cp13e73ejsn1b783f8174b3")
                 .build();
+
         OkHttpClient client = new OkHttpClient();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
+
+        if(body.contains("exceeded the MONTHLY quota")){
+            System.out.println("Used maximum API calls possible this month");
+            return 0.0;
+        }
+
         JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(body);
-        jsonObject = (JSONObject)jsonObject.get("Time Series (Daily)");
+        JSONObject jsonRequestBody = (JSONObject) jsonParser.parse(body);
+        JSONArray priceArray = (JSONArray)jsonRequestBody.get("prices");
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
+        if(priceArray == null){
+            //TODO throw an exception here to handle in calling methods
 
-        long DAY_IN_MS = 1000 * 60 * 60 * 24;
-        Date today = new Date(date.getTime() - (1 * DAY_IN_MS));
-        Date lastweek = new Date(date.getTime() - (8 * DAY_IN_MS));
-        String todayString = dateFormat.format(today).toString();
-        String lastweekString = dateFormat.format(lastweek).toString();
-//        System.out.println("Today: " + todayString);
 
-        JSONObject todayObject = (JSONObject)jsonObject.get(todayString);
-//        System.out.println("today object: " + todayObject);
-        JSONObject lastweekObject = (JSONObject)jsonObject.get(lastweekString);
+            return 0.0;
 
-        // Todo: get first not null JSOnObject from today
-        // Date today = new Date(date.getTime() - (1 * DAY_IN_MS));
-        // keep decreasing day by 1 to get the first not null
+        }
 
-        // Date lastweek = new Date(date.getTime() - (8 * DAY_IN_MS));
-        // lastweek might be null if it's weekend
-        // need to keep decreasing to get the first available not null
+        double priceDifference = 0.0;
+        JSONObject currentDayObject = (JSONObject) priceArray.get(0);
+        long timeStampCurrDay = ((long)(int)currentDayObject.get("date")) * 1000; // convert seconds to milliseconds for date conversion
+        switch (timePeriod){
 
-        // testing weekend
-        // put i back to 1
-//        int i = 3;
-//        Date weekend = new Date(date.getTime() - (i * DAY_IN_MS));
-////        System.out.println(dateFormat.format(weekend));
-//        JSONObject weekend1 = null;
-//        do {
-//            weekend = new Date(date.getTime() - (i * DAY_IN_MS));
-//            String weekendTesting = dateFormat.format(weekend);
-//            weekend1 = (JSONObject) jsonObject.get(weekendTesting);
-//            i++;
-//
-//        } while (weekend1 == null);
-//        System.out.println("closest from weekend: " + dateFormat.format(weekend));
-//
-//        Date weekFromToday;
-//
-//        JSONObject weekFromTodayJSON = null;
-//        do {
-//            // only add 6 because already increment 1 the loop before
-//            weekFromToday = new Date(date.getTime() - ((i  + 6)* DAY_IN_MS));
-//            String s = dateFormat.format(weekFromToday);
-//            weekFromTodayJSON = (JSONObject) jsonObject.get(s);
-//            i++;
-//
-//        } while (weekFromTodayJSON == null);
-//        System.out.println("A week ago: " + dateFormat.format(weekFromToday));
+            case "month":
+                Calendar monthCalendar = Calendar.getInstance();
+                monthCalendar.setTimeInMillis(timeStampCurrDay);
+                monthCalendar.add(Calendar.MONTH, -1);
+                Date prevMonthDate = monthCalendar.getTime();
 
-//        String weekendString = dateFormat.format(weekend).toString();
-//        System.out.println(weekendString);
-//        JSONObject weekendObject = (JSONObject)jsonObject.get(weekendString);
-//        System.out.println(weekendObject);
-//        System.out.println(weekendObject.get("4. close"));
-//
-//        System.out.println("one week from last week");
-//        Date lastweekWeekend = new Date((long)String.valueOf(weekend) - (7 * DAY_IN_MS));
-//        System.out.println(dateFormat.format(lastweekWeekend).toString());
+                //start 20 elements back to start at 4 weeks ago in your search
+                for(int i = 20; i < priceArray.size(); i++){
+                    JSONObject temp = (JSONObject) priceArray.get(i);
+                    long timeStampNum = ((long)(int)temp.get("date")) * 1000; // convert seconds to milliseconds for date conversion
+                    Calendar tempCalendar = Calendar.getInstance();
+                    tempCalendar.setTimeInMillis(timeStampNum);
+                    Date tempDate = tempCalendar.getTime();
 
-        return Double.parseDouble(todayObject.get("4. close").toString()) - Double.parseDouble(lastweekObject.get("4. close").toString());
+                    if(tempDate.before(prevMonthDate)){
+                        priceDifference = (double)currentDayObject.get("close") - (double)temp.get("close");
+                        break;
+                    }
+
+                }
+                break;
+            case "quarter":
+                Calendar quarterCalendar = Calendar.getInstance();
+                quarterCalendar.setTimeInMillis(timeStampCurrDay);
+                quarterCalendar.add(Calendar.MONTH, -3);
+                Date prevQuarterDate = quarterCalendar.getTime();
+
+                //start 60 elements back to start at 12 weeks ago in your search
+                for(int i = 60; i < priceArray.size(); i++){
+                    JSONObject temp = (JSONObject) priceArray.get(i);
+                    long timeStampNum = ((long)(int)temp.get("date")) * 1000; // convert seconds to milliseconds for date conversion
+                    Calendar tempCalendar = Calendar.getInstance();
+                    tempCalendar.setTimeInMillis(timeStampNum);
+                    Date tempDate = tempCalendar.getTime();
+
+                    if(tempDate.before(prevQuarterDate)){
+                        priceDifference = (double)currentDayObject.get("close") - (double)temp.get("close");
+                        break;
+                    }
+
+                }
+                break;
+
+            case "year":
+                JSONObject lastYearPrice = (JSONObject) priceArray.get(priceArray.size()-1);
+                priceDifference = (double)currentDayObject.get("close") - (double)lastYearPrice.get("close");
+                break;
+            case "week":
+            default:
+                //TODO send back error in default work
+                JSONObject lastWeekPrice = (JSONObject) priceArray.get(5);
+                priceDifference = (double)currentDayObject.get("close") - (double)lastWeekPrice.get("close");
+                break;
+        }
+
+        return priceDifference;
+
     }
 }
