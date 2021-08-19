@@ -1,3 +1,6 @@
+ARG USERNAME
+ARG PASSWORD
+
 FROM maven:3.6.3-openjdk-11 AS compile
 COPY . /usr/src/mymaven
 WORKDIR /usr/src/mymaven
@@ -10,6 +13,8 @@ RUN wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java_8.
 RUN dpkg -i /tmp/mysql-connector.deb
 COPY --from=compile /usr/src/mymaven/target/portfolio-0.0.1-SNAPSHOT.jar app.jar
 COPY src/main/resources/application-docker.properties application.properties
+RUN echo "spring.datasource.username=$USERNAME" >> application.properties
+RUN echo "spring.datasource.password=$PASSWORD" >> application.properties
 EXPOSE 8080
 ENV JAVA_OPTS=""
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/urandom -jar /app.jar" ]

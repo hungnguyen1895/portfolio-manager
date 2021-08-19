@@ -8,8 +8,11 @@ pipeline {
   stages {
      stage('Build docker image') {
           // this stage also builds and tests the Java project using Maven
+          environment {
+             MYSQL_CREDS = credentials('MySQLCreds')
+          }
           steps {
-            sh "docker build -t ${dockerImageTag} ."
+            sh "docker build --build-arg USERNAME=${MYSQL_CREDS_USR} --build-arg PASSWORD=${MYSQL_CREDS_PSW} -t ${dockerImageTag} . "
           }
       }
     stage('Deploy Container To Openshift') {
