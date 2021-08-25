@@ -26,13 +26,18 @@ public class UserController {
         return userService.getUserGainersAndLosers(userID);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User payload) {
-        System.out.println(payload);
-        System.out.println("testing");
-
-        return userService.loginUser(payload);
+//    @PostMapping("/login")
+//    public ResponseEntity<User> loginUser(@RequestBody User payload) {
+//        System.out.println(payload);
+//        System.out.println("testing");
+//
+//        return userService.loginUser(payload);
+//    }
+    @GetMapping("/allusers")
+    public Collection<User> getUserGainersAndLosers() {
+        return userService.getAllUsers();
     }
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/networth/{userId}")
     Double getNetWorth(@PathVariable("userID") Integer userID) throws IOException, ParseException {
