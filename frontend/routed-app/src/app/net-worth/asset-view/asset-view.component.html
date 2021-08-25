@@ -1,0 +1,30 @@
+<aside>
+  <!-- see the CSS for this page - some clever 'flex' layout is used -->
+  <form>
+    Stock Code: <input
+      [(ngModel)]='code'
+      (change)='codeChangeHandler()'
+      name='code'
+      placeholder="stock code"
+      minlength="1"
+      maxlength="6"
+      required /><br/>
+    Buy Price C$<input
+      [(ngModel)]='price'
+      name='price'
+      type='number'
+      placeholder="price"
+      min="1" required /><br/>
+      Count {{count}}
+  </form>
+
+  <!-- <p>Code {{code}} Price {{price |currency:'C$'}} Count {{count}} Index {{index}} </p>
+  <p>Price*Count is {{price * count |currency:'C$'}}</p> -->
+  <button (click)='buyStock()'>Buy</button>
+  <!-- *ngIf will decide if the tag gets rendered or not -->
+  <!-- <button *ngIf='count>0' (click)='sellStock()'>Sell</button> -->
+  <!-- [hidden]  AWLAYS renders, but css-display can be 'none' -->
+  <!-- in some cases it makes sense to disable a button -->
+  <button [disabled]='!count' (click)='sellStock()'>Sell</button>
+  <button [disabled]='!count' (click)='resetStock()'>Reset</button>
+</aside>
