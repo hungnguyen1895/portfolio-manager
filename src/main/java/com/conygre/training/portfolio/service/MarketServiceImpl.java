@@ -55,6 +55,10 @@ public class MarketServiceImpl implements MarketService{
 
 
     public static void sortListBasedOnMarketChangePercent(List<StockWithPercent> valuesList){
+        if(valuesList == null)
+            return;
+
+
         for (int i = 0; i < valuesList.size(); i++) {
             for (int j = 1; j < (valuesList.size() - i); j++) {
                 if (valuesList.get(j - 1).getPercentChange() > valuesList.get(j).getPercentChange()) {

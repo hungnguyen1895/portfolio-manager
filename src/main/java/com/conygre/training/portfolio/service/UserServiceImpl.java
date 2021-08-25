@@ -44,10 +44,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<StockWithPercent> getUserGainersAndLosers() {
+    public List<StockWithPercent> getUserGainersAndLosers(Integer userID) {
         List<String> symbols = new LinkedList<>();
         List<StockWithPercent> valuesList;
-        List<Investment> investments = investmentRepository.findAll();
+        Collection<Investment> investments = investmentRepository.findByUserId(userID);
         //get stock symbols for users
         for(Investment investment : investments){
             symbols.add(investment.getStockSymbol());
@@ -62,8 +62,12 @@ public class UserServiceImpl implements UserService {
             return null;
         }
 
-        sortListBasedOnMarketChangePercent(valuesList);
-        Collections.reverse(valuesList);
+
+        if(valuesList != null){
+            sortListBasedOnMarketChangePercent(valuesList);
+            Collections.reverse(valuesList);
+        }
+
 
         return valuesList;
     }

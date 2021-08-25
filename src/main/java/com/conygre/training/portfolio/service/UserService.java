@@ -11,5 +11,5 @@ import java.util.List;
 public interface UserService {
     Collection<User> getAllUsers();
     Double getNetWorth(Integer userID) throws IOException, ParseException;
-    List<StockWithPercent> getUserGainersAndLosers();
+    List<StockWithPercent> getUserGainersAndLosers(Integer userID);
 }

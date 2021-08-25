@@ -19,9 +19,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/index")
-    public List<StockWithPercent> getUserGainersAndLosers() {
-        return userService.getUserGainersAndLosers();
+    @RequestMapping(method = RequestMethod.GET, value = "/index/{userID}")
+    public List<StockWithPercent> getUserGainersAndLosers(@PathVariable("userID") Integer userID) {
+        return userService.getUserGainersAndLosers(userID);
     }
 
 
