@@ -1,0 +1,24 @@
+/* :host styles whatever tag this is inside (we may not know) */
+:host{
+  background-color: black;
+  color:white;
+  font-family: 'Courier New', Courier, monospace;
+  display:inline-block;
+}
+section{
+  background-color: darkslategray;
+  border: 1px solid black;
+}
+/* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+aside{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  background-color: white;
+  color: white;
+  background-color: #777;
+  margin-left:auto;
+  margin-right:auto;
+  border: 1px solid black;
+}
+input {width: 42px;}
