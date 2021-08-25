@@ -7,8 +7,11 @@ import com.conygre.training.portfolio.pojo.StockWithPercent;
 import com.conygre.training.portfolio.repo.InvestmentRepository;
 import com.conygre.training.portfolio.repo.UserRepository;
 import net.minidev.json.parser.ParseException;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.util.*;
@@ -70,5 +73,17 @@ public class UserServiceImpl implements UserService {
 
 
         return valuesList;
+    }
+
+    @Override
+    public ResponseEntity<User> loginUser(@RequestBody Map<String, String> payload) {
+        System.out.println(payload);
+        System.out.println("testing");
+        User user = userRepository.getById(Integer.parseInt(payload.get("id")));
+        System.out.println(Integer.parseInt(payload.get("id")));
+        if (user == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(user);
     }
 }
