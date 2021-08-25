@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody Map<String, String> payload) {
+    public ResponseEntity<User> loginUser(@RequestBody User payload) {
         System.out.println(payload);
         System.out.println("testing");
 

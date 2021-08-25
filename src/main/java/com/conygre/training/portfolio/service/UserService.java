@@ -14,6 +14,6 @@ import java.util.Map;
 public interface UserService {
     Collection<User> getAllUsers();
     Double getNetWorth(Integer userID) throws IOException, ParseException;
-    ResponseEntity<User> loginUser(@RequestBody Map<String, String> payload);
+    ResponseEntity<User> loginUser(@RequestBody User payload);
     List<StockWithPercent> getUserGainersAndLosers(Integer userID);
 }

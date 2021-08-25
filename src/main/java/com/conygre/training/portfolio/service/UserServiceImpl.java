@@ -76,11 +76,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<User> loginUser(@RequestBody Map<String, String> payload) {
-        System.out.println(payload);
-        System.out.println("testing");
-        User user = userRepository.getById(Integer.parseInt(payload.get("id")));
-        System.out.println(Integer.parseInt(payload.get("id")));
+    public ResponseEntity<User> loginUser(@RequestBody User payload) {
+        User user = userRepository.getById(payload.getId());
         if (user == null)
             return ResponseEntity.notFound().build();
 
