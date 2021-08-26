@@ -2,6 +2,7 @@ package com.conygre.training.portfolio.service;
 
 import com.conygre.training.portfolio.DAO.MarketDAO;
 import com.conygre.training.portfolio.entities.Investment;
+import com.conygre.training.portfolio.pojo.StockHistoricalData;
 import com.conygre.training.portfolio.repo.InvestmentRepository;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -54,6 +55,10 @@ public class InvestmentServiceImpl implements InvestmentService{
         return change;
     }
 
+    @Override
+    public StockHistoricalData getHistoricalData(String stockID) throws IOException, ParseException {
+        return marketDAO.getStockHistoricalData(stockID);
+    }
 
 
     private HashMap<String, Double> getAllInvestmentSymbols(Integer userID) {

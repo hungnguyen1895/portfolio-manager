@@ -1,5 +1,7 @@
 package com.conygre.training.portfolio.DAO;
 
+import com.conygre.training.portfolio.pojo.StockHistoricalData;
+import com.conygre.training.portfolio.pojo.StockPriceData;
 import com.conygre.training.portfolio.pojo.StockWithPercent;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -225,4 +227,87 @@ public class SpringJPAMarketDAO implements MarketDAO{
         return priceDifference;
 
     }
+
+
+    public StockHistoricalData getStockHistoricalData(String symbol) throws IOException, ParseException {
+        Request request = new Request.Builder()
+                .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data?symbol=" + symbol + "&region=US")
+                .get()
+                .addHeader("x-rapidapi-host", hostValue)
+                .addHeader("x-rapidapi-key", keyValue)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Response response = client.newCall(request).execute();
+        String body = response.body().string();
+
+        if (body.contains("exceeded the MONTHLY quota")) {
+            System.out.println("Used maximum API calls possible this month");
+            return null;
+        }
+
+        StockHistoricalData stockData = new StockHistoricalData(symbol);
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonRequestBody = (JSONObject) jsonParser.parse(body);
+        JSONArray priceArray = (JSONArray) jsonRequestBody.get("prices");
+
+        if (priceArray == null) {
+            //TODO throw an exception here to handle in calling methods
+            return null;
+        }
+
+        for(int i = 0; i < priceArray.size(); i++){
+            JSONObject temp = (JSONObject) priceArray.get(i);
+            long timeStampNum = ((long)(int)temp.get("date")) * 1000; // convert seconds to milliseconds for date conversion
+            Calendar tempCalendar = Calendar.getInstance();
+            tempCalendar.setTimeInMillis(timeStampNum);
+            Date tempDate = tempCalendar.getTime();
+            Double open;
+            Double high;
+            Double low;
+            Double close;
+            Integer volume;
+            Double adjustedClose;
+
+            if(temp.getAsNumber("open") == null || temp.getAsNumber("high") ==null ||
+                    temp.getAsNumber("low") ==null || temp.getAsNumber("close") ==null ||
+                    temp.getAsNumber("volume") ==null || temp.getAsNumber("adjclose") == null){
+                continue;
+            }
+
+
+
+            try { open = (double) temp.getAsNumber("open"); }
+            catch(Exception e){open = (double)(int)temp.getAsNumber("open");}
+            //
+            try { high = (double) temp.getAsNumber("high"); }
+            catch(Exception e){high = (double)(int)temp.getAsNumber("high");}
+
+            try { low = (double) temp.getAsNumber("low"); }
+            catch(Exception e){low = (double)(int)temp.getAsNumber("low");}
+
+            try { close = (double) temp.getAsNumber("close"); }
+            catch(Exception e){close = (double)(int)temp.getAsNumber("close");}
+
+            volume = (int) temp.getAsNumber("volume");
+
+            try { adjustedClose = (double) temp.getAsNumber("adjclose"); }
+            catch(Exception e){adjustedClose = (double)(int)temp.getAsNumber("adjclose");}
+
+//
+//            high = (double) temp.getAsNumber("high");
+//            low = (double) temp.getAsNumber("low");
+//            close = (double) temp.getAsNumber("close");
+//            volume = (int) temp.getAsNumber("volume");
+//            adjustedClose = (double) temp.getAsNumber("adjclose");
+
+
+
+
+            stockData.prices.add(new StockPriceData(tempDate, open,high,low,close,volume,adjustedClose));
+        }
+
+        return stockData;
+    }
+
 }

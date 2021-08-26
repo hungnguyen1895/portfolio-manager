@@ -1,5 +1,6 @@
 package com.conygre.training.portfolio.DAO;
 
+import com.conygre.training.portfolio.pojo.StockHistoricalData;
 import com.conygre.training.portfolio.pojo.StockWithPercent;
 import net.minidev.json.parser.ParseException;
 
@@ -13,5 +14,5 @@ public interface MarketDAO {
      List<String> getBondsList();
      Double getMarketPrice(String symbol) throws IOException, ParseException;
      Double getSymbolTimeChange(String symbol, String timePeriod) throws IOException, ParseException;
-
+     StockHistoricalData getStockHistoricalData(String stockID) throws IOException, ParseException;
 }

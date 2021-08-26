@@ -1,6 +1,7 @@
 package com.conygre.training.portfolio.rest;
 
 import com.conygre.training.portfolio.entities.User;
+import com.conygre.training.portfolio.pojo.StockHistoricalData;
 import com.conygre.training.portfolio.service.CashAccountService;
 import com.conygre.training.portfolio.service.InvestmentService;
 import net.minidev.json.parser.ParseException;
@@ -27,5 +28,11 @@ public class InvestmentController {
             throws IOException, ParseException {
         return investmentService.getStockChange(timeperiod, userID);
     }
+
+    @GetMapping("/historical/{stockID}")
+    public StockHistoricalData getHistoricalData(@PathVariable("stockID") String stockID) throws IOException, ParseException {
+        return investmentService.getHistoricalData(stockID);
+    }
+
 
 }
