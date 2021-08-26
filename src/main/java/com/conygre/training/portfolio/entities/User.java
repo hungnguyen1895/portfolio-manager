@@ -31,6 +31,17 @@ public class User {
     public List<CashAccount> getCashAccounts() {
         return cashAccounts;
     }
+    @JoinColumn(name="user_id", referencedColumnName="id")
+    @OneToMany( cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<Investment> investments;
+
+    public List<Investment> getInvestments() {
+        return investments;
+    }
+
+    public void setInvestments(List<Investment> investments) {
+        this.investments = investments;
+    }
 
     public void setCashAccounts(List<CashAccount> cashAccounts) {
         this.cashAccounts = cashAccounts;
