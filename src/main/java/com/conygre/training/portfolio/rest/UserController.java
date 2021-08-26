@@ -40,8 +40,8 @@ public class UserController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/networth/{userId}")
-    Double getNetWorth(@PathVariable("userID") Integer userID) throws IOException, ParseException {
-        return userService.getNetWorth(userID);
+    public Double getNetWorth(@PathVariable Integer userId) throws IOException, ParseException {
+        return userService.getNetWorth(userId);
     }
 
 }
