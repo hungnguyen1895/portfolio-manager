@@ -22,7 +22,7 @@ import java.util.*;
 public class SpringJPAMarketDAO implements MarketDAO{
     //TODO UPDATE TO NEW PROFILE ON DEMO DAY
     private final String hostValue = "apidojo-yahoo-finance-v1.p.rapidapi.com";
-    private final String keyValue = "db6eb71ecdmsh807241375c5cf11p16acf4jsnbfa1fd68a129";
+    private final String keyValue = "fbb3178e45mshee38ae3a73b7127p146a6bjsn428510a8eb30";
 
     @Override
     public List<StockWithPercent> getMarketChangePercents(List<String> symbols) throws ParseException, IOException {
