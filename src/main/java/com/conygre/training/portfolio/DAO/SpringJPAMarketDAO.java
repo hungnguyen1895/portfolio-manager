@@ -22,7 +22,11 @@ import java.util.*;
 public class SpringJPAMarketDAO implements MarketDAO{
     //TODO UPDATE TO NEW PROFILE ON DEMO DAY
     private final String hostValue = "apidojo-yahoo-finance-v1.p.rapidapi.com";
-    private final String keyValue = "fbb3178e45mshee38ae3a73b7127p146a6bjsn428510a8eb30";
+    private final String keyValue0 = "fcfcfdf252msh84517817668d611p15bb10jsn82ff671089d4"; //jovanny01 - j.o.vannyvera02@gmail.com
+    private final String keyValue1 = "0f5545644fmsh5c3731df9fe07a0p1b35b6jsn399ff2ebe3f4";//jovanny011 - j.o.v.annyvera02@gmail.com
+    private final String keyValue2 = "cb51e7ff22msh68b857faf73f841p1a65fbjsne723c85e63da";//jovanny0111 - jovannyve.r.a02@gmail.com
+    private final String keyValue3 = "82d7ec8642msh6847d001486e322p1c248cjsn09c8f8a46626";//jovanny012 - jo.vannyve.r.a02@gmail.com
+    private final String keyValue4 = "b6fa22418amsh65de41bc534134dp1aca8cjsna92a150534f7";//jovanny0123 - jovannyver.a02@gmail.com
 
     @Override
     public List<StockWithPercent> getMarketChangePercents(List<String> symbols) throws ParseException, IOException {
@@ -41,7 +45,7 @@ public class SpringJPAMarketDAO implements MarketDAO{
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=" + symbolString.toString())
                 .get()
                 .addHeader("x-rapidapi-host", hostValue)
-                .addHeader("x-rapidapi-key", keyValue)
+                .addHeader("x-rapidapi-key", keyValue0)
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -75,7 +79,7 @@ public class SpringJPAMarketDAO implements MarketDAO{
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-summary?region=US")
                 .get()
                 .addHeader("x-rapidapi-host", hostValue)
-                .addHeader("x-rapidapi-key", keyValue)
+                .addHeader("x-rapidapi-key", keyValue1)
                 .build();
 
         String body = client.newCall(request).execute().body().string();
@@ -114,7 +118,7 @@ public class SpringJPAMarketDAO implements MarketDAO{
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=" + symbol)
                 .get()
                 .addHeader("x-rapidapi-host", hostValue)
-                .addHeader("x-rapidapi-key", keyValue)
+                .addHeader("x-rapidapi-key", keyValue2)
                 .build();
         OkHttpClient client = new OkHttpClient();
         Response response = client.newCall(request).execute();
@@ -140,7 +144,7 @@ public class SpringJPAMarketDAO implements MarketDAO{
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data?symbol=" + symbol + "&region=US")
                 .get()
                 .addHeader("x-rapidapi-host", hostValue)
-                .addHeader("x-rapidapi-key", keyValue)
+                .addHeader("x-rapidapi-key", keyValue3)
                 .build();
 
         OkHttpClient client = new OkHttpClient();
@@ -234,7 +238,7 @@ public class SpringJPAMarketDAO implements MarketDAO{
                 .url("https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data?symbol=" + symbol + "&region=US")
                 .get()
                 .addHeader("x-rapidapi-host", hostValue)
-                .addHeader("x-rapidapi-key", keyValue)
+                .addHeader("x-rapidapi-key", keyValue4)
                 .build();
 
         OkHttpClient client = new OkHttpClient();
